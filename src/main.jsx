@@ -9,6 +9,8 @@ import ProtectedRoute from "./Components/Fragments/Routes/ProtectedRoute.jsx";
 import PublicRoute from "./Components/Fragments/Routes/PublicRoute.jsx";
 import MainLayout from "./Components/Layouts/MainLayout.jsx";
 import EditMoviePage from "./Pages/editMovie.jsx";
+import { Provider } from "react-redux";
+import { store } from "./store/redux/store.js";
 
 
 const router = createBrowserRouter([
@@ -54,6 +56,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );
