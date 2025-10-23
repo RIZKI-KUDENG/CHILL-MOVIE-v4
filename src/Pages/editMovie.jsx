@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
-import { useMovies } from "../store/useMovies";
+import { useEffect } from "react";
 import MovieSlider from "../Components/Fragments/Movies/MovieSlider";
 import { useModal } from "../store/useModal";
 import Button from "../Components/Elements/Button";
 import MovieModal from "../Components/Fragments/Modal/MovieModal";
 import AddMovieModal from "../Components/Fragments/Modal/AddMovieModal";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchMovies } from "../store/redux/movieSlice";
+
 
 const EditMoviePage = () => {
   const { onOpenModal, activeModal, onClose } = useModal();
-  const { getMovies, movies, isLoading } = useMovies();
+  const dispatch = useDispatch();
+  const {movies, isLoading} = useSelector((state) => state.movies);
   useEffect(() => {
-    getMovies();
-  }, []);
+    dispatch(fetchMovies());
+  }, [dispatch]);
   const top = movies.filter((movie) => movie.kategori === "Top");
   const New = movies.filter((movie) => movie.kategori === "New");
   const trending = movies.filter((movie) => movie.kategori === "Trending");

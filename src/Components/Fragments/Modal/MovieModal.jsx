@@ -1,9 +1,10 @@
 import InputField from "../InputField";
 import Button from "../../Elements/Button";
 import { useState, useEffect } from "react";
-import { useMovies } from "../../../store/useMovies";
+import { useDispatch } from "react-redux";
+import { editMovie, deleteMovie } from "../../../store/redux/movieSlice";
 const MovieModal = ({ movie, onClose }) => {
-  const { updateMovie, deleteMovie } = useMovies();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     title: "",
     image: "",
@@ -35,25 +36,31 @@ const MovieModal = ({ movie, onClose }) => {
       alert("Error: ID Film tidak ditemukan!");
       return;
     }
-    const success = await updateMovie(movie.id, dataToUpdate);
-    if (success) {
+    try {
+      await dispatch(
+        editMovie({ movieId: movie.id, updateData: dataToUpdate })
+      ).unwrap();
       alert("Edit berhasil");
       onClose();
-    } else {
-      alert("Edit gagal");
+    } catch (rejectedValueOrSerializedError) {
+      alert(`gagal: ${rejectedValueOrSerializedError}`);
     }
   };
   const handleDelete = async () => {
-    if (movie.id) {
-      confirm(`Apakah Anda yakin ingin menghapus movie ${movie.title}?`);
+    if (!movie?.id) {
+      confirm(`ID film tidak ditemukan!`);
       return;
     }
-    const success = await deleteMovie(movie.id);
-    if (success) {
-      alert("Hapus berhasil");
-      onClose();
-    } else {
-      alert("Hapus gagal");
+    if (
+      window.confirm(`Apakah Anda yakin ingin menghapus movie ${movie.title}?`)
+    ) {
+      try {
+        await dispatch(deleteMovie(movie.id)).unwrap();
+        alert("Hapus berhasil");
+        onClose();
+      } catch (rejectedValueOrSerializedError) {
+        alert(`gagal: ${rejectedValueOrSerializedError}`);
+      }
     }
   };
   return (

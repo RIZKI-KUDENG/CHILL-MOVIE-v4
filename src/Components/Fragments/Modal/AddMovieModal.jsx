@@ -1,9 +1,10 @@
 import InputField from "../InputField";
 import Button from "../../Elements/Button";
 import { useState } from "react";
-import { useMovies } from "../../../store/useMovies";
+import { useDispatch } from "react-redux";
+import { addMovie } from "../../../store/redux/movieSlice";
 const AddMovieModal = ({ onClose }) => {
-  const { addMovie } = useMovies();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     title: "",
     image: "",
@@ -24,12 +25,12 @@ const AddMovieModal = ({ onClose }) => {
       alert("Semua field harus diisi!");
       return;
     }
-    const success = await addMovie(formData);
-    if (success) {
+    try {
+      await dispatch(addMovie(formData)).unwrap();
       alert("Tambah berhasil");
       onClose();
-    } else {
-      alert("Tambah gagal");
+    } catch (rejectedValueOrSerializedError) {
+      alert(`gagal: ${rejectedValueOrSerializedError}`);
     }
   };
   return (

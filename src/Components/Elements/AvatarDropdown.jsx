@@ -1,6 +1,7 @@
 import { useDropdown } from "../../store/useDropdown";
-import { useAuthStore } from "../../store/authStore";
 import { Link } from "react-router-dom";
+import { logout } from "../../store/redux/authSlice";
+import { useDispatch } from "react-redux";
 const AvatarDropdown = () => {
   const { isOpen, onOpen, onClose } = useDropdown();
   const handleOpen = () => {
@@ -10,10 +11,11 @@ const AvatarDropdown = () => {
       onOpen();
     }
   };
-
-  const { logout } = useAuthStore();
+  const dispatch = useDispatch();
   const handleLogout = () => {
-    logout();
+    const result = logout();
+    dispatch({type: "auth/logout", payload: result});
+    alert(result.message)
     window.location.href = "/login";
   };
   return (

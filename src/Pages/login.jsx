@@ -1,24 +1,32 @@
-import { useState, useEffect, use } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../Components/Layouts/AuthLayout";
 import InputField from "../Components/Fragments/InputField";
 import Button from "../Components/Elements/Button";
 import { Link } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
-
+import { login } from "../store/redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
-    const {login, isLoading, error} = useAuthStore();
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        const loginSucces = await login(username, password);
-        if(loginSucces){
-            navigate('/')
-        } 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector((state) => state.auth);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const loginSucces = await dispatch(
+        login({ username, password })
+      ).unwrap();
+      if (loginSucces) {
+        navigate("/");
+      }
+    } catch (err) {
+      alert(err || "Login gagal");
     }
+  };
   return (
     <AuthLayout
       title="MASUK"
@@ -46,7 +54,10 @@ const LoginPage = () => {
         <div className="flex justify-between items-center text-sm gap-2 sm:gap-4 mt-2">
           <p className="text-[#C1C2C4]">
             Belum Punya Akun?{" "}
-            <Link to="/register" className="font-bold text-white hover:underline">
+            <Link
+              to="/register"
+              className="font-bold text-white hover:underline"
+            >
               Daftar
             </Link>
           </p>

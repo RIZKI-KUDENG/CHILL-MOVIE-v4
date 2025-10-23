@@ -1,32 +1,35 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../Components/Layouts/AuthLayout";
 import InputField from "../Components/Fragments/InputField";
 import Button from "../Components/Elements/Button";
 import { Link } from "react-router-dom";
-import {useAuthStore} from '../store/authStore'
+import { register } from "../store/redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-  const {register, isLoading, error} = useAuthStore();
-
-const handleRegister = async (e) => {
+  const dispatch = useDispatch();
+  const { isLoading, error } = useSelector((state) => state.auth);
+  const handleRegister = async (e) => {
     e.preventDefault();
-    if(password !== confirmPassword){
-        alert("password tidak sama")
-        return
+    if (password !== confirmPassword) {
+      alert("password tidak sama");
+      return;
     }
-    const succes = await register(username, password);
-    if(succes){
-        alert("Registrasi berhasil")
-        navigate('/login')
+    try {
+      const success = await dispatch(register({ username, password })).unwrap();
+      if (success) {
+        alert("Registrasi berhasil");
+        navigate("/login");
+      }
+    } catch (err) {
+      alert(err || "Registrasi gagal");
     }
-}
-
-
+  };
 
   return (
     <AuthLayout

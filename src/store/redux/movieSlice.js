@@ -18,6 +18,7 @@ export const addMovie = createAsyncThunk(
     try {
       await apiClient.post("/movies", newMovie);
       dispatch(fetchMovies());
+      return true;
     } catch (err) {
       const message = err.response.data.message || err.message;
       return rejectWithValue(message);
