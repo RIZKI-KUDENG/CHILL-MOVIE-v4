@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import apiClient from "../../lib/axios";
+import * as movieService from "../../Services/Api/movieService";
 export const fetchMovies = createAsyncThunk(
   "movies/fetchMovies",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.get("/movies");
-      return response.data;
+      const data = await movieService.getAllMovies();
+      return data;
     } catch (err) {
       const message = err.response.data.message || err.message;
       return rejectWithValue(message);
@@ -16,7 +16,7 @@ export const addMovie = createAsyncThunk(
   "movies/addMovie",
   async (newMovie, { dispatch, rejectWithValue }) => {
     try {
-      await apiClient.post("/movies", newMovie);
+      await movieService.createMovie(newMovie);
       dispatch(fetchMovies());
       return true;
     } catch (err) {
@@ -29,9 +29,9 @@ export const editMovie = createAsyncThunk(
   "movies/editMovie",
   async ({ movieId, updateData }, { dispatch, rejectWithValue }) => {
     try {
-      await apiClient.put(`/movies/${movieId}`, updateData);
+      await movieService.editMovie(movieId, updateData);
       dispatch(fetchMovies());
-      return { movieId, updateData };
+      return true;
     } catch (err) {
       const message = err.response.data.message || err.message;
       return rejectWithValue(message);
@@ -42,9 +42,9 @@ export const deleteMovie = createAsyncThunk(
   "movies/deleteMovie",
   async (movieId, { dispatch, rejectWithValue }) => {
     try {
-      await apiClient.delete(`/movies/${movieId}`);
+      await movieService.deleteMovieById(movieId);
       dispatch(fetchMovies());
-      return movieId;
+      return true;
     } catch {
       const message = err.response.data.message || err.message;
       return rejectWithValue(message);

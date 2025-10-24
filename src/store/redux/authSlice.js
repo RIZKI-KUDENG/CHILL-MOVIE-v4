@@ -1,25 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import apiClient from "../../lib/axios";
-import bcrypt from "bcryptjs";
+import * as authService from "../../Services/Api/authService";
 
 export const login = createAsyncThunk(
   "auth/login",
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const user = await apiClient.get(`/users`, { params: { username } });
-      if (user.data.length === 0) {
-        throw new Error("User not found");
-      }
-      const foundUser = user.data[0];
-      const isPasswordMatch = bcrypt.compareSync(password, foundUser.password);
-      if (isPasswordMatch) {
-        const fakeToken = `fake-token-for ${foundUser.id}`;
-        localStorage.setItem("user", JSON.stringify(foundUser));
-        localStorage.setItem("token", fakeToken);
-        return { user: foundUser, token: fakeToken, message: "Login berhasil" };
-      } else {
-        throw new Error("Password salah");
-      }
+      const user = await authService.login(username, password);
+      return user;
     } catch (err) {
       const errorMessage = err.message;
       return rejectWithValue(errorMessage);
@@ -30,11 +17,8 @@ export const register = createAsyncThunk(
   "auth/register",
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(password, salt);
-      const userData = { username, password: hashedPassword };
-      await apiClient.post("/users", userData);
-      return { message: "Registrasi berhasil" };
+      const user = await authService.register(username, password);
+      return user;
     } catch (err) {
       const errorMessage = err.response.data.message || err.message;
       return rejectWithValue(errorMessage);

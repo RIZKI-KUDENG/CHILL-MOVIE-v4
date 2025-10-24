@@ -6,6 +6,7 @@ import MovieModal from "../Components/Fragments/Modal/MovieModal";
 import AddMovieModal from "../Components/Fragments/Modal/AddMovieModal";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchMovies } from "../store/redux/movieSlice";
+import ListView from "../Components/Fragments/ListView";
 
 
 const EditMoviePage = () => {
@@ -62,6 +63,9 @@ const EditMoviePage = () => {
           onCardClick={handleCardClick}
         />
       )}
+      <div className="my-8">
+        <ListView />
+      </div>
       {activeModal.name === "editMovie" && (
         <MovieModal onClose={onClose} movie={activeModal.data} />
       )}
