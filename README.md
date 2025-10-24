@@ -1,4 +1,4 @@
-# CHILL Movie App (v3)
+# CHILL Movie App (v4)
 
 CHILL adalah aplikasi web streaming film modern yang dibuat dengan React. Proyek ini menampilkan antarmuka yang bersih untuk menjelajahi, menambah, dan mengelola daftar film, lengkap dengan sistem autentikasi pengguna.
 
@@ -23,7 +23,7 @@ CHILL adalah aplikasi web streaming film modern yang dibuat dengan React. Proyek
 -   **Build Tool:** [Vite](https://vitejs.dev/)
 -   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 -   **Routing:** [React Router](https://reactrouter.com/)
--   **State Management:** [Zustand](https://github.com/pmndrs/zustand)
+-   **State Management:** [Redux](https://github.com/reduxjs/redux-toolkit)
 -   **HTTP Client:** [Axios](https://axios-http.com/)
 -   **Password Hashing:** [bcryptjs](https://github.com/dcodeIO/bcrypt.js)
 
